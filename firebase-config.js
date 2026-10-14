@@ -1,9 +1,9 @@
 /* CONFIGURACAO DO FIREBASE DESTA FARMACIA. E o unico ficheiro que muda de cliente para cliente. Cola aqui o objeto copiado em Firebase > Configuracoes do projeto > Geral > Seus aplicativos > Config. */
 const firebaseConfig = {
-  apiKey: "COLAR_AQUI",
-  authDomain: "COLAR_AQUI.firebaseapp.com",
-  projectId: "COLAR_AQUI",
-  storageBucket: "COLAR_AQUI.firebasestorage.app",
-  messagingSenderId: "COLAR_AQUI",
-  appId: "COLAR_AQUI"
+  apiKey: "AIzaSyBGawQEzDDIdK-B5HLZ69xcM9Gvb50aFCs",
+  authDomain: "farmacia02-fef9f.firebaseapp.com",
+  projectId: "farmacia02-fef9f",
+  storageBucket: "farmacia02-fef9f.firebasestorage.app",
+  messagingSenderId: "208584651804",
+  appId: "1:208584651804:web:bee2e58d38a19eb6c61bd9"
 };
