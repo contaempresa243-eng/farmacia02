@@ -1195,8 +1195,38 @@ body { transition: background-color 0.3s ease, color 0.3s ease; }
     </div>
 
 
+    <!-- Aviso visível de erros de arranque (evita ecrã em branco) -->
+    <script>
+        (function () {
+            function mostrar(msg) {
+                var d = document.getElementById('erro-arranque');
+                if (!d) {
+                    d = document.createElement('div');
+                    d.id = 'erro-arranque';
+                    d.style.cssText = 'position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#dc2626;color:#fff;padding:12px 14px;border-radius:10px;font:14px/1.4 system-ui,sans-serif;white-space:pre-wrap;word-break:break-word';
+                    document.documentElement.appendChild(d);
+                }
+                d.textContent += (d.textContent ? '\n\n' : '') + '⚠️ ' + msg;
+            }
+            window.mostrarErroArranque = mostrar;
+            window.addEventListener('error', function (e) {
+                mostrar('Erro: ' + (e.message || 'ficheiro não carregou') +
+                        (e.filename ? '\n(' + e.filename.split('/').pop() + (e.lineno ? ':' + e.lineno : '') + ')' : ''));
+            }, true);
+            window.addEventListener('unhandledrejection', function (e) {
+                mostrar('Erro: ' + ((e.reason && e.reason.message) || e.reason));
+            });
+        })();
+    </script>
     <!-- Configuração do Firebase desta farmácia (único ficheiro a editar por cliente) -->
     <script src="firebase-config.js"></script>
+    <script>
+        if (typeof firebaseConfig === 'undefined') {
+            window.mostrarErroArranque('O ficheiro firebase-config.js não carregou ou tem erro. Confirma que existe na mesma pasta do index.html e que contém só: const firebaseConfig = { ... };');
+        } else if (JSON.stringify(firebaseConfig).indexOf('COLAR_AQUI') !== -1) {
+            window.mostrarErroArranque('O firebase-config.js ainda tem COLAR_AQUI. Cola os valores do Firebase (Configurações do projeto → Geral → Seus aplicativos → Config).');
+        }
+    </script>
     <script>
 
         firebase.initializeApp(firebaseConfig);
