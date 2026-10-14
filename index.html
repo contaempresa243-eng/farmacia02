@@ -3593,8 +3593,18 @@ function partilharFechoWhatsApp() {
                 titulo.textContent = 'Histórico de Vendas';
                 const snap = await db.collection('vendas').orderBy('data', 'desc').get();
                 dadosRelatorio = snap.docs.map(d => d.data());
+                // Suporta vendas novas (vários itens em "itens") e vendas antigas (1 produto)
+                const itensDaVenda = (v) => (Array.isArray(v.itens) && v.itens.length > 0)
+                    ? v.itens
+                    : (v.produtoNome ? [{ produtoNome: v.produtoNome, quantidade: v.quantidade }] : []);
                 conteudo.innerHTML = `<table class="w-full text-xs"><tr><th>Data</th><th>Produto</th><th>Qtd</th><th>Total</th></tr>` +
-                    dadosRelatorio.map(v => `<tr><td>${new Date(v.data).toLocaleDateString()}</td><td>${v.produtoNome}</td><td>${v.quantidade}</td><td>${v.total} Kz</td></tr>`).join('') + `</table>`;
+                    dadosRelatorio.map(v => {
+                        const itens = itensDaVenda(v);
+                        const nomes = itens.length ? itens.map(i => escaparHTML(i.produtoNome)).join(', ') : '—';
+                        const qtd = itens.reduce((s, i) => s + (Number(i.quantidade) || 0), 0);
+                        const marca = v.anulada ? ' <span class="text-red-600 font-bold">(ANULADA)</span>' : '';
+                        return `<tr><td>${new Date(v.data).toLocaleDateString('pt-AO')}</td><td>${nomes}${marca}</td><td>${qtd}</td><td>${v.total} Kz</td></tr>`;
+                    }).join('') + `</table>`;
             } else if (tipo === 'lucro') {
                 titulo.textContent = 'Relatório de Lucro e Margem';
                 const snap = await db.collection('vendas').get();

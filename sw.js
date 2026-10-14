@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farmastock-v7';
+const CACHE_NAME = 'farmastock-v8';
 const assetsToCache = [
   './',
   './index.html',
